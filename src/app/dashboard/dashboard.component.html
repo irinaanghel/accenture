@@ -1,0 +1,101 @@
+<div class="bg-slate-100 h-full">
+	<!-- Header Section -->
+	<header class="flex justify-center items-center border-b p-5 shadow-2xl bg-white">
+	  <p class="text-xl !mb-0">Studio Livelli Pazienti</p>
+	</header>
+  
+	<!-- Main Content Section -->
+	<main class="flex flex-col lg:flex-row items-center lg:items-start gap-1 bg-slate-100 w-full pt-5">
+	  <!-- Chart Section -->
+	  <section class="flex flex-col justify-center items-center gap-3 bg-white rounded-2xl m-4 shadow">
+		<div class="flex flex-col flex-auto w-full p-5 text-center hover:cursor-pointer">
+		  <app-pie-chart 
+			*ngIf="(data$ | async) as data" 
+			[data]="data">
+		  </app-pie-chart>
+		</div>
+	  </section>
+  
+	  <!-- Filters and Table Section -->
+	  <section class="w-full mt-4 lg:mr-4 flex flex-col gap-4">
+		<!-- Filters -->
+		<div class="h-full w-full overflow-scroll shadow rounded-2xl bg-white p-4 pb-0">
+		  <form [formGroup]="filterForm" class="flex gap-3 w-full flex-col lg:flex-row">
+			<!-- Search Field -->
+			<mat-form-field class="w-full">
+			  <mat-label>Cerca per nome</mat-label>
+			  <input matInput placeholder="Cerca per nome" formControlName="search">
+			</mat-form-field>
+  
+			<!-- Level Filter -->
+			<mat-form-field class="w-full">
+			  <mat-label>Livello</mat-label>
+			  <mat-select formControlName="level">
+				<mat-option value="true">Superato</mat-option>
+				<mat-option value="false">Non Superato</mat-option>
+			  </mat-select>
+			  <mat-icon 
+				matSuffix 
+				class="cursor-pointer stroke-black" 
+				(click)="clear()">close
+			  </mat-icon>
+			</mat-form-field>
+		  </form>
+		</div>
+  
+		<!-- Data Table -->
+		<div class="h-full w-full overflow-scroll shadow rounded-2xl">
+		  <table mat-table [dataSource]="dataSource">
+			<!-- Name Column -->
+			<ng-container matColumnDef="name">
+			  <th mat-header-cell *matHeaderCellDef class="!text-start !pl-6">Paziente</th>
+			  <td mat-cell *matCellDef="let element; let i = index" class="my-row text-center pt-2" 
+				[class.my-row__alternate]="i % 2">
+				<div 
+				  class="flex items-center w-full px-2 filter-info hover:underline hover:cursor-pointer" 
+				  [routerLink]="['../profile', element.id]">
+				  <img 
+					class="w-10 h-10 object-cover" 
+					[src]="element.gender === 'male' ? '../assets/avatar-male.png' : '../assets/avatar-female.png'">
+				  <div class="flex flex-col w-full ml-2">
+					<div class="text-[15px] leading-tight">
+					  {{ element?.name | uppercase }}
+					</div>
+				  </div>
+				</div>
+			  </td>
+			</ng-container>
+  
+			<!-- BirthDate Column -->
+			<ng-container matColumnDef="birthdate">
+			  <th mat-header-cell *matHeaderCellDef>Data di Nascita</th>
+			  <td mat-cell *matCellDef="let element; let i = index" class="my-row text-center pt-2" 
+				[class.my-row__alternate]="i % 2">
+				{{ element?.birthDate | date:'dd-MM-yyyy' }}
+			  </td>
+			</ng-container>
+  
+			<!-- Level Column -->
+			<ng-container matColumnDef="level">
+			  <th mat-header-cell *matHeaderCellDef>Livello</th>
+			  <td mat-cell *matCellDef="let element; let i = index" class="my-row text-center pt-2" 
+				[class.my-row__alternate]="i % 2" 
+				[ngClass]="element?.level ? 'text-green-600' : 'text-red-600'">
+				{{ element?.level ? 'Superato' : 'Non Superato' }}
+			  </td>
+			</ng-container>
+  
+			<!-- No Data Row -->
+			<ng-container mat-row *matNoDataRow class="my-row shadow-lg">
+			  <td class="p-4 w-full text-black text-center bg-white" colspan="3">Nessun Dato Corrispondente</td>
+			</ng-container>
+  
+			<!-- Header and Row Definitions -->
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		  </table>
+		</div>
+	  </section>
+	</main>
+  </div>
+  

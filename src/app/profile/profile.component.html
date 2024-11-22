@@ -1,0 +1,80 @@
+<div class="bg-slate-100 h-full" *ngIf="patient">
+	<!-- Header Section -->
+	<header class="flex justify-between items-center border-b p-5 shadow-2xl bg-white">
+	  <p class="text-xl !mb-0">Paziente #{{ patient.id }}</p>
+	  <button 
+		class="rounded-md flex items-center w-max bg-slate-700 p-3" 
+		mat-flat-button 
+		type="button" 
+		[routerLink]="['../..']">
+		<span class="ml-2 mr-1 text-white">Indietro</span>
+	  </button>
+	</header>
+  
+	<!-- Main Content Section -->
+	<main class="flex flex-col lg:flex-row items-center lg:items-start gap-1 bg-slate-100 w-full pt-5">
+	  <!-- Patient Details Section -->
+	  <section class="flex flex-col justify-center items-center gap-3 bg-white rounded-2xl m-4 shadow lg:max-w-80">
+		<!-- Avatar & Basic Info -->
+		<div class="flex flex-col flex-auto w-full p-5 text-center hover:cursor-pointer">
+		  <!-- Avatar -->
+		  <div class="w-32 h-32 mx-auto rounded-full overflow-hidden">
+			<img 
+			  class="w-full h-full object-cover" 
+			  [src]="patient.gender === 'male' ? '../assets/avatar-male.png' : '../assets/avatar-female.png'">
+		  </div>
+		  <!-- Name and BirthDate -->
+		  <div class="mt-6 font-medium">{{ patient.name }}</div>
+		  <p class="font-normal text-xs text-secondary !mb-0">{{ patient.birthDate | date:'dd-MM-yyyy' }}</p>
+		  <div class="font-normal text-xs text-secondary">
+			{{ patient.gender === 'male' ? 'Maschio' : 'Femmina' }}
+		  </div>
+  
+		  <!-- Divider -->
+		  <hr class="mb-0 mt-4 w-full border-t">
+  
+		  <!-- Info -->
+		  <div class="my-4 gap-5 flex w-full items-center justify-between px-2">
+			<div class="flex flex-col items-center">
+			  <span class="font-bold">{{ patient.heightCm }} Cm</span>
+			  <span class="text-secondary text-sm font-medium">Altezza</span>
+			</div>
+			<div class="flex flex-col items-center">
+			  <span class="font-bold">{{ patient.weightKg }} Kg</span>
+			  <span class="text-secondary text-sm font-medium">Peso</span>
+			</div>
+			<div class="flex flex-col items-center">
+			  <span class="font-bold">{{ patient.bmi }} Indice</span>
+			  <span class="text-secondary text-sm font-medium">BMI</span>
+			</div>
+		  </div>
+		</div>
+	  </section>
+  
+	  <!-- Activities Section -->
+	  <section class="flex flex-col justify-center items-center gap-3 bg-white rounded-2xl m-4 shadow w-full">
+		<div class="flex flex-col flex-auto w-full p-8 text-center hover:cursor-pointer">
+		  <!-- Title -->
+		  <p class="font-bold text-xl">Attività Svolte</p>
+		  <hr class="my-2 w-full border-t">
+  
+		  <!-- Activities List -->
+		  <div class="flex flex-col gap-5 w-full mt-3">
+			<div 
+			  *ngFor="let a of patient.activities" 
+			  class="flex items-center w-fit gap-4">
+			  <!-- Activity Icon -->
+			  <img 
+				class="w-10 h-10" 
+				[src]="'../assets/icon/' + a.activity + '.png'">
+			  <!-- Activity Name -->
+			  <p class="!mb-0">{{ translateActivity(a.activity) }}</p>
+			  <!-- Duration -->
+			  <p class="!mb-0">{{ convertToHoursAndMinutes(a.minutes) }}</p>
+			</div>
+		  </div>
+		</div>
+	  </section>
+	</main>
+  </div>
+  
